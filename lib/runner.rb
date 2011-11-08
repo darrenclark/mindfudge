@@ -4,12 +4,14 @@ module MindFudge
 
 class Runner
 	
-	def initialize
+	def initialize(code, &char_input)
+		@code = clean_code(code)
+		@char_input = char_input
 		@memory = Memory.new
 	end
 	
-	def run(code)
-		@code = clean_code(code)
+	def run
+		@memory.reset	
 		@ip = 0
 		
 		while @ip < @code.length
@@ -26,6 +28,10 @@ class Runner
 				@memory.decrement
 			when '.'
 				print "" << @memory.current_value
+			when ','
+				byte = @char_input.call
+				byte = byte[0] if byte.is_a? String
+				@memory.current_value = byte
 			when '['
 				if @memory.current_value == 0
 					jump_to_closing_bracket

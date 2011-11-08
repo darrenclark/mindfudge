@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'highline'
 require 'lib/runner'
 
 USAGE_STRING = <<-eos
@@ -15,22 +17,20 @@ def error! error_string
 	exit
 end
 
-
-runner = MindFudge::Runner.new
-
+code = ""
 if ARGV.count == 2 and ARGV[0] == "-c"
-	runner.run(ARGV[1])
+	code = ARGV[1]
 elsif ARGV.count == 1
 	begin
-		contents = ""
 		f = File.new(ARGV[0], "r")
 		while (str = f.gets)
-			contents << str
+			code << str
 		end
 		f.close
-
-		runner.run(contents)
 	rescue => exception
 		error! exception.to_s
 	end
 end
+
+runner = MindFudge::Runner.new(code) { HighLine::SystemExtensions::get_character }
+runner.run

@@ -11,6 +11,11 @@ module MindFudge
 			@cell_pointer = 0
 		end
 
+		def reset
+			@cells = [0] * 30000
+			@cell_pointer = 0
+		end
+
 		def move_forward
 			@cell_pointer += 1
 			@cell_pointer = CELL_POINTER_MIN if @cell_pointer > CELL_POINTER_MAX
